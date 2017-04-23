@@ -78,12 +78,12 @@ public class Airport {
 	}
 
 	private static void addPassenger() {
-		
+
 		System.out.println("Please enter the First Name: ");
 		String firstName = scan.nextLine();
 		System.out.println("Please enter the  SurName: ");
 		String surname = scan.nextLine();
-		
+
 		Passenger passenger = new Passenger();
 		passenger.setFirstName(firstName);
 		passenger.setSurname(surname);
@@ -103,38 +103,82 @@ public class Airport {
 	}
 
 	private static void saveToFile() {
-		
+
 		File file = new File("Output.txt");
 		try {
 			PrintWriter pw = new PrintWriter(file);
-			
-			for(Passenger passenger: queue1.passengersQueue){
-				pw.write(passenger.getFirstName()+" "+passenger.getSurname()+"\r");
+
+			for (Passenger passenger : queue1.passengersQueue) {
+				pw.write(passenger.getFirstName() + " " + passenger.getSurname() + "\r");
 			}
-			
+
 			pw.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		if(file.exists()){
+
+		if (file.exists()) {
 			System.out.println("File exists");
-		}
-		else{
+		} else {
 			System.out.println("file not created!");
 		}
 		
+
 	}
 
 	private static void loadFromFile() {
-
+		System.out.println("Reading from the file\n");
+		
+		Scanner scanFile = null;
+		PassengerQueue.NumberofPassengers = 0;
+		int i=0;
+		boolean firstresult=true;
 		try {
-			Scanner scanFile = new Scanner(new File("Output.txt"));
+			scanFile = new Scanner(new File("Output.txt"));
+			String line;
+			String scanedFirstname;
+			String scanedSurname;
+			
+			while (scanFile.hasNextLine()) {
+				
+				line = scanFile.nextLine();
+				System.out.println(line);
+				scanedFirstname=line.split(" ")[0];
+				scanedSurname = line.split(" ")[1];
+				Passenger addpassenger = new Passenger();
+				//checking whether the scanned lines are not empty fields of first and surnames
+				if (!scanedFirstname.equalsIgnoreCase("Empty")&&
+						!scanedSurname.equalsIgnoreCase("Empty")) {
+					
+					if (firstresult) {
+						PassengerQueue.first = i;
+						firstresult = false;
+					}
+					addpassenger.setFirstName(scanedFirstname);
+					addpassenger.setSurname(scanedSurname);
+					PassengerQueue.passengersQueue[i] = addpassenger;
+					PassengerQueue.NumberofPassengers++;
+					PassengerQueue.last = i;
+//					queue1.add(addpassenger);	
+				}else{
+					
+					addpassenger.setFirstName(scanedFirstname);
+					addpassenger.setSurname(scanedSurname);
+					PassengerQueue.passengersQueue[i] = addpassenger;
+				}
+				i++;
+			}
+			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		finally {
+			scanFile.close();
+		}
+		
+		System.out.println("Passengers: "+PassengerQueue.NumberofPassengers);
+		
 
 	}
 }
