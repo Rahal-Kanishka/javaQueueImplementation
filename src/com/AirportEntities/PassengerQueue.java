@@ -16,25 +16,12 @@ public class PassengerQueue {
 			passenger.setSurname("Empty");
 			passengersQueue[i] = passenger;
 
-			System.out.println("Passenger queue is Initialized" + " " + passengersQueue[i].getFirstName() + " "
-					+ passengersQueue[i].getSurname());
+//			System.out.println("Passenger queue is Initialized" + " " + passengersQueue[i].getFirstName() + " "
+//					+ passengersQueue[i].getSurname());
 		}
-		System.out.println("Passengers: " + NumberofPassengers + " length: " + passengersQueue.length);
+		System.out.println("Queue is initialized with Passengers: " + NumberofPassengers + " length: " + passengersQueue.length);
 
-		// for (Passenger passenger : passengersQueue) {
-		//
-		//
-		// passenger = new Passenger();
-		// passenger.setFirstName("Empty");
-		// passenger.setSurname("Empty");
-		// add(passenger);
-		//
-		//
-		// System.out.println("Passenger queue is Initialized" + " " +
-		// passenger.getFirstName() + " "
-		// + passenger.getSurname());
-		// }
-
+		
 	}
 
 	public void add(Passenger passenger) {
@@ -46,14 +33,15 @@ public class PassengerQueue {
 		} else if (last == passengersQueue.length) {
 			first = first - 1;
 			passengersQueue[first] = passenger;
-			NumberofPassengers = NumberofPassengers+1;
+			NumberofPassengers = NumberofPassengers + 1;
 		} else {
 			last = last + 1;
 			passengersQueue[last] = passenger;
-			NumberofPassengers = NumberofPassengers+1;
+			NumberofPassengers = NumberofPassengers + 1;
 		}
-		
-		System.out.println("Passenger "+passenger.getFirstName()+" "+passenger.getSurname()+" added on "+last);
+
+		System.out
+				.println("Passenger " + passenger.getFirstName() + " " + passenger.getSurname() + " added on " + last);
 	}
 
 	public void remove() {
@@ -65,14 +53,13 @@ public class PassengerQueue {
 				// remove only the first item of the queue (i == first)
 				if ((!passengersQueue[i].getFirstName().equalsIgnoreCase("Empty")
 						|| !passengersQueue[i].getSurname().equalsIgnoreCase("Empty")) && (i == first)) {
-
-					System.out.println(passengersQueue[i].getFirstName() + " " + passengersQueue[i].getSurname()
-							+ " is going to be removed!");
-
+					
 					passengersQueue[i].setFirstName("Empty");
 					passengersQueue[i].setSurname("Empty");
-					NumberofPassengers = NumberofPassengers-1;
-					System.out.println("Passengers: "+NumberofPassengers);
+					System.out.println(passengersQueue[i].getFirstName() + " " + passengersQueue[i].getSurname()
+							+ " removed!");
+					NumberofPassengers = NumberofPassengers - 1;
+					System.out.println("Passengers: " + NumberofPassengers);
 					if (isEmpty()) {
 						System.err.println("Error: Queue is Emptied!");
 						first = 0;
@@ -83,14 +70,11 @@ public class PassengerQueue {
 					}
 					break;
 				} else {
-					System.out.println(passengersQueue[i].getFirstName() + " " + passengersQueue[i].getSurname()
-							+ " not removed!");
+					//not removed
 				}
 
 			}
-			// passengersQueue[first] = null;
-			// first--;
-//			NumberofPassengers = NumberofPassengers-1;
+
 		}
 	}
 
@@ -104,11 +88,6 @@ public class PassengerQueue {
 			}
 			System.out.println("Passengers: " + NumberofPassengers);
 		}
-
-		// for (int i = 0; i < passengersQueue.length; i++) {
-		// System.out.println(passengersQueue[i].getFirstName() + " " +
-		// passengersQueue[i].getSurname());
-		// }
 
 	}
 

@@ -1,17 +1,26 @@
 package com.AirportEntities;
 
 import java.io.File;
+import java.util.Random;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Scanner;
+
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 public class Airport {
 	static Scanner scan = new Scanner(System.in);
 	static PassengerQueue queue1;
 	static Passenger[] passengers;
+	static int nextpassengerposition=0;
+	static int maximumlength=0;
+	static int maximumwaitingtime=0;
+	static int minimumwaitingtime=50;
+	static int totoalwaitingtime=0;
 
 	public static void main(String[] args) {
 		queue1 = new PassengerQueue();
+		passengers = new Passenger[30];
 		displayMenueOptions();
 
 		String letter = scan.nextLine();
@@ -47,6 +56,16 @@ public class Airport {
 			}
 			case "R": {
 				System.out.println("Entered R\n");
+				readDatFile();
+				
+				while(nextpassengerposition<=20){
+					joinQueue();
+					setProcessingDelay();
+					queue1.remove(); //removing the next passenger	
+				}
+				generateReport();
+				
+				
 
 				break;
 			}
@@ -63,7 +82,113 @@ public class Airport {
 		System.out.println("Programme Simulation has been finished!");
 
 	}
+	private static void readDatFile(){
+		try {
+			Scanner scanFile = new Scanner(new File("passengers.dat"));
+			String scanedFirstname;
+			String scanedSurname;
+		int i = 0;
+		
+			while(scanFile.hasNextLine()){
+				String readline = scanFile.nextLine();
+//				System.out.println(readline);
+				Passenger pass = new Passenger();
+				scanedFirstname = readline.split(" ")[0];
+				scanedSurname = readline.split(" ")[1];
+				pass.setFirstName(scanedFirstname);
+				pass.setSurname(scanedSurname);
+				passengers[i] = pass;
+			i++;
+			}
+			
+			
+		} catch (FileNotFoundException e) {
+		
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static void generateReport(){
+		String report;
+		
+		report = "==============Report==============\r"
+				+"maximum Waiting Time is: "+maximumwaitingtime+"\r"
+				+"minimum Waiting Time is: "+minimumwaitingtime+"\r"
+				+"maximum Queue length is: "+maximumlength+"\r";
+		
+		
+		File file = new File("report.dat");
+		
+			try {
+				PrintWriter pw = new PrintWriter(file);
+				pw.write(report);
+				System.out.println(report);
+				pw.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	}
 
+	private static int D6(){
+		
+		int value;
+		Random rn = new Random();
+		value = rn.nextInt(6) +1;
+		return value;
+	}
+	
+	private static int nD6(int n){
+		int sum=0;
+		for (int i = 0; i < n; i++) {
+			sum += D6();
+		}
+		return sum;
+		
+	}
+	
+	private static void joinQueue(){
+		
+		
+		int joiningnumber;
+		
+		//random number of passengers who will join the queue @ Airport
+		joiningnumber = D6();
+		//Adding the passengers to the queue
+		
+		for (int i = nextpassengerposition; i <joiningnumber; i++) {
+			//adding passengers to the queue untill its full
+			queue1.add(passengers[i]);
+			passengers[i]= null;
+		}
+		nextpassengerposition=+ joiningnumber;
+		System.out.println(joiningnumber+" passengers Added to Queue");
+		if (maximumlength<PassengerQueue.NumberofPassengers) {
+			maximumlength=PassengerQueue.NumberofPassengers;
+		}
+		
+	}
+	
+	private static void setProcessingDelay(){
+		int delay;
+		for (int i = 0; i < PassengerQueue.passengersQueue.length; i++) {
+			delay = nD6(3);
+			PassengerQueue.passengersQueue[i].setSecondsInQueue(delay);
+			if (maximumwaitingtime<delay) {
+				maximumwaitingtime=delay;
+			}
+			if (minimumwaitingtime>delay) {
+				minimumwaitingtime=delay;
+			}
+			totoalwaitingtime+=delay;
+		}
+		
+		
+	}
+	
+	
 	private static void displayMenueOptions() {
 
 		System.out.println("--------------------Main Menue--------------------");
@@ -114,7 +239,7 @@ public class Airport {
 
 			pw.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
